@@ -6,5 +6,22 @@ import java.util.*;
 public class VenueSelector {
     private final List<Venue> venues;
     public VenueSelector(List<Venue> venues) { this.venues = venues; }
-    public Venue selectVenue(double budget, int guestCount) { return null; }
+    public Venue selectVenue(double budget, int guestCount) {
+        double currentCost = venues.getFirst().getCost();
+        Venue chosen = new Venue("Unknown", 0, 0, 0, 0);
+        for (Venue venue:venues) {
+            if (venue.getCapacity() > guestCount) {
+                if (venue.getCost() < budget) {
+                    if (venue.getCost() < currentCost) {
+                        currentCost = venue.getCost();
+                        chosen = venue;
+                    }
+                }
+            }
+        }
+        if ((chosen.getName().equals("Unknown"))) {
+            return null;
+        }
+        return chosen;
+    }
 }
