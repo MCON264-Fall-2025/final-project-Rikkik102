@@ -27,12 +27,24 @@ public class GuestListManagerTest {
     }
 
     @Test
+    void testRemoveNonExistentGuest() {
+        GuestListManager glm = new GuestListManager();
+        assertFalse(glm.removeGuest("Harvey"));
+    }
+
+    @Test
     void testFindGuest() {
         Guest harvey = new Guest("Harvey", "Neighbor");
         GuestListManager glm = new GuestListManager();
         glm.addGuest(harvey);
         Guest found = glm.findGuest("Harvey");
         assertEquals(harvey, found);
+    }
+
+    @Test
+    void testFindNonExistentGuest() {
+        GuestListManager glm = new GuestListManager();
+        assertNull(glm.findGuest("Harvey"));
     }
 
     @Test
