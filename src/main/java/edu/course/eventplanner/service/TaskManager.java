@@ -10,25 +10,25 @@ public class TaskManager {
     public void addTask(Task task) {
         upcoming.add(task);
     }
-    public boolean executeNextTask() {
+    public Task executeNextTask() {
         if (!upcoming.isEmpty()){
             Task currentTask = upcoming.poll();
             completed.push(currentTask);
-            return true;
+            return currentTask;
         }
         else {
-            return false;
+            return null;
         }
     }
 
-    public boolean undoLastTask() {
+    public Task undoLastTask() {
         if (!completed.isEmpty()) {
             Task currentTask = completed.pop();
             upcoming.addLast(currentTask);
-            return true;
+            return currentTask;
         }
         else {
-            return false;
+            return null;
         }
     }
 

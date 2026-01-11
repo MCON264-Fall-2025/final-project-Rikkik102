@@ -4,8 +4,7 @@ import edu.course.eventplanner.model.Task;
 import edu.course.eventplanner.service.TaskManager;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskManagerTest {
     @Test
@@ -29,7 +28,7 @@ public class TaskManagerTest {
     @Test
     void testExecuteEmptyList() {
         TaskManager tm = new TaskManager();
-        assertFalse(tm.executeNextTask());
+        assertNull(tm.executeNextTask());
     }
 
     @Test
@@ -46,7 +45,7 @@ public class TaskManagerTest {
     @Test
     void testUndoEmptyList() {
         TaskManager tm = new TaskManager();
-        assertFalse(tm.undoLastTask());
+        assertNull(tm.undoLastTask());
     }
 
     @Test

@@ -87,14 +87,14 @@ public class Main {
                     tm.addTask(new Task(description));
                     break;
                 case "7":
-                    if (tm.executeNextTask()) {
+                    if (tm.executeNextTask() != null) {
                         System.out.println("Execution successful");
                     } else {
                         System.out.println("Execution unsuccessful: No tasks waiting to be completed");
                     }
                     break;
                 case "8":
-                    if (tm.undoLastTask()) {
+                    if (tm.undoLastTask() != null) {
                         System.out.println("Successfully undid last completed task");
                     } else {
                         System.out.println("Fail: no completed tasks found");

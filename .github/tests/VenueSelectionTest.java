@@ -1,4 +1,4 @@
-package edu.course.eventplanner;
+package edu.course.eventplanner.githubTests;
 
 import edu.course.eventplanner.model.Venue;
 import edu.course.eventplanner.service.VenueSelector;
