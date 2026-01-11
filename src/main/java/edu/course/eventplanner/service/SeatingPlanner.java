@@ -36,20 +36,15 @@ public class SeatingPlanner {
 
             if (maxTables >= numOfGroups) {
                 Integer currTable = 1;
-
                 for (Map.Entry<String, List<Guest>> entry : hm.entrySet()) {
                     clique = entry.getValue();
-
                     while (clique.size() > seatsPerTable) {
                         overflow.add(clique.removeLast());
                     }
-
                     answer.put(currTable, clique);
-
                     if (clique.size() < seatsPerTable) {
                         tablesWithExtraRoom.add(currTable);
                     }
-
                     currTable++;
                 }
 
@@ -57,11 +52,9 @@ public class SeatingPlanner {
                     //put extra guests on empty tables
                     for (Integer i = currTable; i <= maxTables && !overflow.isEmpty(); i++) {
                         List<Guest> extraGuests = new ArrayList<>();
-
                         while (!overflow.isEmpty() && extraGuests.size() < seatsPerTable) {
                             extraGuests.add(overflow.removeFirst());
                         }
-
                         answer.put(i, extraGuests);
                     }
                 }
@@ -70,16 +63,81 @@ public class SeatingPlanner {
                     // put guests on table with extra room
                     for (Integer key : tablesWithExtraRoom) {
                         List<Guest> table = answer.get(key);
-
                         while (!overflow.isEmpty() && table.size() < seatsPerTable) {
                             table.add(overflow.removeFirst());
                         }
-
                         if (overflow.isEmpty()) break;
                     }
                 }
             }
+            else {
+                // make  the map a list to check group size
+                List<List<Guest>> groupList = new ArrayList<>(hm.values());
 
+                // Sort groups by size biggest to smallest
+                groupList.sort((a, b) -> b.size() - a.size());
+
+                // Track remaining seats per table
+                Map<Integer, Integer> remainingSeats = new HashMap<>();
+
+                // Initialize empty tables
+                for (int i = 1; i <= maxTables; i++) {
+                    answer.put(i, new ArrayList<>());
+                    remainingSeats.put(i, seatsPerTable);
+                }
+
+                List<List<Guest>> unplacedGroups = new ArrayList<>();
+
+                for (List<Guest> group : groupList) {
+                    boolean placed = false;
+
+                    // Try to find a table with enough space for the entire group
+                    for (int tableNum = 1; tableNum <= maxTables; tableNum++) {
+                        if (remainingSeats.get(tableNum) >= group.size()) {
+                            answer.get(tableNum).addAll(group);
+                            remainingSeats.put(
+                                    tableNum,
+                                    remainingSeats.get(tableNum) - group.size()
+                            );
+                            placed = true;
+                            break;
+                        }
+                    }
+                    // keep track of the unplaced groups
+                    if (!placed) {
+                        unplacedGroups.add(group);
+                    }
+                }
+                for (List<Guest> group : unplacedGroups) {
+                    int guestIndex = 0;
+                    while (guestIndex < group.size()) {
+                        // Find table with the most remaining seats
+                        int bestTable = -1;
+                        int mostSeats = 0;
+                        for (int tableNum = 1; tableNum <= maxTables; tableNum++) {
+                            int seatsLeft = remainingSeats.get(tableNum);
+                            if (seatsLeft > mostSeats) {
+                                mostSeats = seatsLeft;
+                                bestTable = tableNum;
+                            }
+                        }
+                        if (bestTable == -1 || mostSeats == 0) {
+                            break;
+                        }
+                        while (guestIndex < group.size()
+                                && remainingSeats.get(bestTable) > 0) {
+
+                            answer.get(bestTable).add(group.get(guestIndex));
+                            guestIndex++;
+
+                            remainingSeats.put(
+                                    bestTable,
+                                    remainingSeats.get(bestTable) - 1
+                            );
+                        }
+                    }
+                }
+            }
             return answer;
         }
     }

@@ -49,7 +49,7 @@ public class SeatingPlannerTest {
     }
     @Test
     void testGenerateSeatingWithNotEnoughTables() {
-        Venue sands = new Venue("Sands Atlantic", 100000, 6, 3, 2);
+        Venue sands = new Venue("Sands Atlantic", 100000, 6, 2, 3);
         SeatingPlanner sp = new SeatingPlanner(sands);
         List<Guest> guests= new LinkedList<>();
         Guest harvey = new Guest("Harvey", "neighbor");
@@ -57,7 +57,7 @@ public class SeatingPlannerTest {
         Guest harveyy = new Guest("Harvey", "neighbor");
         Guest deidree = new Guest("Deidre", "family");
         Guest harveyyy = new Guest("Harvey", "neighbor");
-        Guest carmen = new Guest("Carmen", "family");
+        Guest carmen = new Guest("Carmen", "friend");
         guests.add(harvey);
         guests.add(deidre);
         guests.add(harveyy);
@@ -65,7 +65,13 @@ public class SeatingPlannerTest {
         guests.add(harveyyy);
         guests.add(carmen);
         Map<Integer, List<Guest>> answer= sp.generateSeating(guests);
-        assertEquals(3, answer.size());
+        assertEquals(2, answer.size());
+        List<Integer> tableSizes = answer.values()
+                .stream()
+                .map(List::size)
+                .sorted()
+                .toList();
+        assertEquals(List.of(3, 3), tableSizes);
     }
     @Test
     void testGenerateSeatingWithSplitGroupTables() {
