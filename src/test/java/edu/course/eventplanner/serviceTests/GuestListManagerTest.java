@@ -29,6 +29,7 @@ public class GuestListManagerTest {
     @Test
     void testRemoveNonExistentGuest() {
         GuestListManager glm = new GuestListManager();
+        glm.addGuest(new Guest("Shirley", "family"));
         assertFalse(glm.removeGuest("Harvey"));
     }
 

@@ -10,6 +10,7 @@ public class TaskManager {
     public void addTask(Task task) {
         upcoming.add(task);
     }
+
     public Task executeNextTask() {
         if (!upcoming.isEmpty()){
             Task currentTask = upcoming.poll();
