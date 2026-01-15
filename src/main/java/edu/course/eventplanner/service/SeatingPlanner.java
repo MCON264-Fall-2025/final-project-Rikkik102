@@ -86,8 +86,6 @@ public class SeatingPlanner {
                     remainingSeats.put(i, seatsPerTable);
                 }
 
-                List<List<Guest>> unplacedGroups = new ArrayList<>();
-
                 for (List<Guest> group : groupList) {
 
                     // Try to find a table with enough space for the entire group
