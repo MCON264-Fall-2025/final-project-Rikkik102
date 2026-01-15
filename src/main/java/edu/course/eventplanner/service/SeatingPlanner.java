@@ -89,7 +89,6 @@ public class SeatingPlanner {
                 List<List<Guest>> unplacedGroups = new ArrayList<>();
 
                 for (List<Guest> group : groupList) {
-                    boolean placed = false;
 
                     // Try to find a table with enough space for the entire group
                     for (int tableNum = 1; tableNum <= maxTables; tableNum++) {
@@ -99,41 +98,7 @@ public class SeatingPlanner {
                                     tableNum,
                                     remainingSeats.get(tableNum) - group.size()
                             );
-                            placed = true;
                             break;
-                        }
-                    }
-                    // keep track of the unplaced groups
-                    if (!placed) {
-                        unplacedGroups.add(group);
-                    }
-                }
-                for (List<Guest> group : unplacedGroups) {
-                    int guestIndex = 0;
-                    while (guestIndex < group.size()) {
-                        // Find table with the most remaining seats
-                        int bestTable = -1;
-                        int mostSeats = 0;
-                        for (int tableNum = 1; tableNum <= maxTables; tableNum++) {
-                            int seatsLeft = remainingSeats.get(tableNum);
-                            if (seatsLeft > mostSeats) {
-                                mostSeats = seatsLeft;
-                                bestTable = tableNum;
-                            }
-                        }
-                        if (bestTable == -1 || mostSeats == 0) {
-                            break;
-                        }
-                        while (guestIndex < group.size()
-                                && remainingSeats.get(bestTable) > 0) {
-
-                            answer.get(bestTable).add(group.get(guestIndex));
-                            guestIndex++;
-
-                            remainingSeats.put(
-                                    bestTable,
-                                    remainingSeats.get(bestTable) - 1
-                            );
                         }
                     }
                 }

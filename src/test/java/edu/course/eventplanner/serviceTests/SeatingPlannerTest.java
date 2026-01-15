@@ -107,4 +107,94 @@ public class SeatingPlannerTest {
         }
         assertTrue(neighborOnFamilyTable);
     }
+
+    @Test
+    void testGenerateSeatingWithOverflowToEmptyTables() {
+        Venue venue = new Venue("Sands", 100000, 20, 5, 4);
+        SeatingPlanner sp = new SeatingPlanner(venue);
+        List<Guest> guests = new LinkedList<>();
+
+        // Create a group larger than seatsPerTable
+        for (int i = 0; i < 7; i++) {
+            guests.add(new Guest("Person" + i, "cousins"));
+        }
+
+        guests.add(new Guest("Harvey", "friend"));
+        guests.add(new Guest("Deidre", "friend"));
+
+        Map<Integer, List<Guest>> answer = sp.generateSeating(guests);
+
+        // Should have at least 2 tables
+        assertTrue(answer.size() >= 2);
+
+        int totalSeated = answer.values().stream()
+                .mapToInt(List::size)
+                .sum();
+        assertEquals(9, totalSeated);
+    }
+
+    @Test
+    void testGenerateSeatingWithOverflowToTablesWithExtraRoom() {
+        // Tests the scenario where overflow guests fill tables with extra room
+        Venue venue = new Venue("Sands Atlantic", 100000, 12, 3, 3); // 3 tables, 3 seats each
+        SeatingPlanner sp = new SeatingPlanner(venue);
+        List<Guest> guests = new LinkedList<>();
+
+        guests.add(new Guest("Harvey", "group1"));
+        guests.add(new Guest("Harveyy", "group1"));
+
+        guests.add(new Guest("Dierdre", "group2"));
+        guests.add(new Guest("Dierdree", "group2"));
+
+        for (int i = 0; i < 5; i++) {
+            guests.add(new Guest("Guy " + i, "group3"));
+        }
+
+        Map<Integer, List<Guest>> answer = sp.generateSeating(guests);
+
+        // Should use 3 tables
+        assertEquals(3, answer.size());
+
+        int totalSeated = answer.values().stream()
+                .mapToInt(List::size)
+                .sum();
+        assertEquals(9, totalSeated);
+
+        boolean hasMixedTable = false;
+        for (List<Guest> table : answer.values()) {
+            long uniqueGroups = table.stream()
+                    .map(Guest::getGroupTag)
+                    .distinct()
+                    .count();
+            if (uniqueGroups > 1) {
+                hasMixedTable = true;
+                break;
+            }
+        }
+        assertTrue(hasMixedTable, "One table should have more than one group on it");
+    }
+
+
+    @Test
+    void testGenerateSeatingWithUnplacedGroupsSplitting() {
+        // Tests the unplaced groups logic where groups must be split
+        Venue venue = new Venue("Valhalla", 100000, 5, 2, 2);
+        SeatingPlanner sp = new SeatingPlanner(venue);
+        List<Guest> guests = new LinkedList<>();
+
+        // Create one large group that won't fit on a single table
+        for (int i = 0; i < 5; i++) {
+            guests.add(new Guest("Guy " + i, "fam"));
+        }
+
+        Map<Integer, List<Guest>> answer = sp.generateSeating(guests);
+
+        // Should use both tables
+        assertEquals(2, answer.size());
+
+        int totalSeated = answer.values().stream()
+                .mapToInt(List::size)
+                .sum();
+        assertTrue(totalSeated >= 4 && totalSeated <= 5);
+    }
 }
