@@ -13,7 +13,11 @@ linked lists, stacks, queues, maps, trees, sorting, and searching.
 - An array list in seating planner to count the guests in each group
 
 ## Searching and Sorting Algorithms
-I used a binary sort algorithm in venue selector because it used a tree map.
+- I used a binary sort algorithm in venue selector because it used a tree map.
+- A merge sort was used in the generate seating method of the seating planner class.
+After checking that there were more groups than tables, the method converts each group to an array list 
+and calls List.sort to put the groups in sorted order. The List class uses a merge sort in its sort() method to sort more efficiently.
+
 
 
 ## Big-O Complexity
